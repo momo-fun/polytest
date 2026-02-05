@@ -50,4 +50,7 @@ If you want, I can add more sophisticated sentiment models or on-chain analytics
 
 Notes:
 - Serverless file storage is ephemeral; SQLite here is used only for short-lived caching.
+## Node version
+
+This project targets Node.js 20.x (set in `package.json` and `.nvmrc`).
 
