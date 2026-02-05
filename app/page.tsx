@@ -59,10 +59,24 @@ function usePolling<T>(url: string, fallback: ApiState<T>) {
     const load = async () => {
       try {
         const res = await fetch(url);
-        const json = await res.json();
-        if (active) {
-          setData(json);
+        const json = await res.json().catch(() => null);
+        if (!active) return;
+
+        if (!res.ok) {
+          setData({
+            ...fallback,
+            error: (json as any)?.error ?? `HTTP ${res.status}`,
+            updatedAt: new Date().toISOString()
+          });
+          return;
         }
+
+        // Defensive: if the API returns a shape without markets, don't crash the UI.
+        setData({
+          ...fallback,
+          ...(json ?? {}),
+          markets: ((json as any)?.markets ?? []) as T[]
+        });
       } catch (error) {
         if (active) {
           setData({ ...fallback, error: (error as Error).message });

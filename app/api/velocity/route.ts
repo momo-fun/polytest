@@ -98,7 +98,12 @@ export async function GET() {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: (error as Error).message ?? "Unknown error" },
+      {
+        error: (error as Error).message ?? "Unknown error",
+        updatedAt: new Date().toISOString(),
+        count: 0,
+        markets: []
+      },
       { status: 500 }
     );
   }
